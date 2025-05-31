@@ -1,3 +1,25 @@
 spring:
   application:
    name: reactive-kafka
+  kafka:
+    bootstrap-servers: localhost:9092
+    properties:
+      security.protocol: SASL_PLAINTEXT #SASL_SSL
+      sasl.mechanism: SCRAM-SHA-256
+      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="kafka-user" password="kafka-password";
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      group-id: reactive-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.example.reactivekafka.model.Message
+
+configuration:
+  kafka:
+    topic: messages-topic
